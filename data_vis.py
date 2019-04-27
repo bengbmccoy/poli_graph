@@ -1,5 +1,5 @@
 '''
-Writte: Ben McCoy, 201903
+Written: Ben McCoy, 201903
 
 This scipt will be used to help improve my data visualisation and presentation skills.
 I will be using mostly matplotlib to perform this.
@@ -19,7 +19,7 @@ def get_opt_scale(time):
             opt_scale = i
             break
 
-    return opt_scale
+    return opt_scalequi
 
 def moving_plot(df):
     '''
@@ -85,6 +85,27 @@ def basic_plot(df):
     data_df_tran.plot(kind='barh', y='Odds', x='Candidates')
     plt.show()
 
+def test_plot(df):
+
+    data_df_tran = df.last('1h').T
+    names = data_df_tran.index.tolist()
+    odds = data_df_tran[str(list(data_df_tran.columns.values)[0])].tolist()
+    x_tix = range(1,len(names)+1)
+
+    for i in range(4):
+
+        plt.style.use('ggplot') # Pick which style to use
+        plt.xticks(x_tix, names)
+        plt.xlabel('Candidates')
+        plt.ylabel('Betting Price ($AUD)')
+        plt.bar([a - (i/10) for a in x_tix], odds, label='Candidate Price')
+        plt.draw()
+        plt.clf()
+
+def moving_bar_plot(df):
+
+    print df
+
 def main():
 
     parser = argparse.ArgumentParser()
@@ -96,6 +117,10 @@ def main():
     parser.add_argument('-b', '--basic',
                         help='displays current basic odds',
                         action='store_true')
+    parser.add_argument('-t', '--test',
+                        help='displays current test plot',
+                        action='store_true')
+
 
     args=parser.parse_args()
 
@@ -110,6 +135,7 @@ def main():
     if args.basic:
         basic_plot(data_df)
 
-
+    if args.test:
+        test_plot(data_df)
 
 main()
